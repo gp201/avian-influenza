@@ -44,13 +44,13 @@ jobs:
           chunk_files=$(cat chunk_files.txt | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
           echo "chunk_files=$chunk_files" >> $GITHUB_OUTPUT
       - name: Upload chunk files
-        if: ${{ hashFiles('output/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != '' }}
+        if: ${{ steps.split_sra.outputs.chunk_files != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: chunk_files
           path: ${{ github.workspace }}/sra_chunks/
       - name: Upload Metadata
-        if: ${{ hashFiles('output/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != '' }}
+        if: ${{ steps.split_sra.outputs.chunk_files != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: metadata
@@ -58,7 +58,7 @@ jobs:
 
   process_sra:
     needs: fetch_sra
-    if: ${{ fromJson(needs.fetch_sra.outputs.chunk_files) != '' }}
+    if: ${{ needs.fetch_sra.outputs.chunk_files != '' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
