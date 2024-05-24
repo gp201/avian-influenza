@@ -31,7 +31,7 @@ jobs:
       - name: Run nextflow
         run: nextflow run https://github.com/gp201/flusra.git -r 'main' -c ${{ github.workspace }}/config/nextflow.config -profile mamba --only_fetch true --bioproject "PRJNA1102327" --outdir ${{ env.NXF_OUPUT }}
       - name: Split SRAs into chunks
-        if: hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != ''
+        if: ${{ hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != '' }}
         id: split_sra
         run: |
           mkdir -p ${{ github.workspace }}/sra_chunks
@@ -42,13 +42,13 @@ jobs:
           chunk_files=$(cat chunk_files.txt | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
           echo "chunk_files=$chunk_files" >> $GITHUB_OUTPUT
       - name: Upload chunk files
-        if: hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != ''
+        if: ${{ hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: chunk_files
           path: ${{ github.workspace }}/sra_chunks/
       - name: Upload Metadata
-        if: hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != ''
+        if: ${{ hashFiles('${{ env.NXF_OUPUT }}/metadata/SraRunTable_PRJNA1102327_automated_new.txt') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: metadata
