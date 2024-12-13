@@ -45,7 +45,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/sra_chunks/milk_samples
           split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/chunk_
           split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_samples/chunk_milk_
-          ls ${{ github.workspace }}/sra_chunks/samples/samples/ > chunk_files.txt
+          ls ${{ github.workspace }}/sra_chunks/samples/ > chunk_files.txt
           ls ${{ github.workspace }}/sra_chunks/milk_samples/ > chunk_milk_files.txt
           chunk_files=$(cat chunk_files.txt | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
           chunk_milk_files=$(cat chunk_milk_files.txt | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sra_chunks
-          path: ${{ github.workspace }}/sra_chunks/samples/samples/
+          path: ${{ github.workspace }}/sra_chunks/samples/
       - name: Upload chunk files
         if: ${{ steps.split_sra.outputs.chunk_files != '' }}
         uses: actions/upload-artifact@v4
