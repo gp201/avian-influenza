@@ -43,7 +43,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/sra_chunks/
           mkdir -p ${{ github.workspace }}/sra_chunks/samples
           mkdir -p ${{ github.workspace }}/sra_chunks/milk_samples
-          split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/samples/chunk_
+          split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/chunk_
           split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_samples/chunk_milk_
           ls ${{ github.workspace }}/sra_chunks/samples/samples/ > chunk_files.txt
           ls ${{ github.workspace }}/sra_chunks/milk_samples/ > chunk_milk_files.txt
