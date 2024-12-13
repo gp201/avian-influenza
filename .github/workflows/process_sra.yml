@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: milk_chunks
-          path: ${{ github.workspace }}/sra_chunks/milk_samples/chunk_milk_
+          path: ${{ github.workspace }}/sra_chunks/milk_samples/
       - name: Upload Metadata
         if: ${{ steps.split_sra.outputs.chunk_files != '' }}
         uses: actions/upload-artifact@v4
@@ -85,7 +85,7 @@ jobs:
       - name: Download chunk files
         uses: actions/download-artifact@v4
         with:
-          name: chunk_files
+          name: sra_chunks
           path: ${{ github.workspace }}/sra_chunks/
       - name: Run nextflow
         run: nextflow run https://github.com/gp201/flusra.git -r ${{ env.FLUSRA_VERSION }} -c ${{ github.workspace }}/config/nextflow.config -profile mamba --sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.chunk_file }} --outdir ${{ env.NXF_OUPUT }}
