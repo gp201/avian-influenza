@@ -40,6 +40,7 @@ jobs:
         if: ${{ hashFiles('output/metadata/SraRunTable_automated_new.txt') != '' }}
         id: split_sra
         run: |
+          mkdir -p ${{ github.workspace }}/sra_chunks/
           mkdir -p ${{ github.workspace }}/sra_chunks/samples
           mkdir -p ${{ github.workspace }}/sra_chunks/milk_samples
           split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/samples/chunk_
