@@ -19,6 +19,7 @@ env:
   NXF_OUPUT: ${{ github.workspace }}/output
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   FLUSRA_VERSION: 'gff_support'
+  FILES_PER_CHUNK: 4
 
 defaults:
   run:
@@ -43,8 +44,8 @@ jobs:
           mkdir -p ${{ github.workspace }}/sra_chunks/
           mkdir -p ${{ github.workspace }}/sra_chunks/samples
           mkdir -p ${{ github.workspace }}/sra_chunks/milk_samples
-          split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/chunk_
-          split -l 5 ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_samples/chunk_milk_
+          split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/samples/chunk_
+          split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_samples/chunk_milk_
           ls ${{ github.workspace }}/sra_chunks/samples/ > chunk_files.txt
           ls ${{ github.workspace }}/sra_chunks/milk_samples/ > chunk_milk_files.txt
           chunk_files=$(cat chunk_files.txt | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
