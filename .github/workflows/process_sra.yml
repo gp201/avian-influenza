@@ -27,7 +27,7 @@ defaults:
 
 jobs:
   fetch_sra:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       chunk_files: ${{ steps.split_sra.outputs.chunk_files }}
       chunk_milk_files: ${{ steps.split_sra.outputs.chunk_milk_files }}
@@ -74,9 +74,10 @@ jobs:
   process_sra:
     needs: fetch_sra
     if: ${{ needs.fetch_sra.outputs.chunk_files != '' }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
+      max-parallel: 20
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_files)}}
     steps:
@@ -109,9 +110,10 @@ jobs:
   process_milk_samples:
     needs: fetch_sra
     if: ${{ needs.fetch_sra.outputs.chunk_milk_files != '' }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
+      max-parallel: 20
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_milk_files)}}
     steps:
@@ -134,7 +136,7 @@ jobs:
 
   push_files:
     needs: [process_sra, process_milk_samples]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
