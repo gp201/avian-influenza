@@ -14,7 +14,7 @@ concurrency:
   group: ${{ github.repository }}
 
 env:
-  NXF_VER: "23.04.1"
+  NXF_VER: "24.10"
   NXF_WORK: ${{ github.workspace }}/work
   NXF_OUPUT: ${{ github.workspace }}/output
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,7 +84,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: ./.github/actions/install-dependencies
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
       - name: Download chunk files
         uses: actions/download-artifact@v4
         with:
@@ -106,7 +107,7 @@ jobs:
         with:
           name: outputs
           path: |
-            /home/runner/ncbi_error_report.txt
+            ${{ env.NXF_WORK }}
 
   process_milk_samples:
     needs: fetch_sra
@@ -120,7 +121,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: ./.github/actions/install-dependencies
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
       - name: Download chunk files
         uses: actions/download-artifact@v4
         with:
@@ -134,6 +136,14 @@ jobs:
           name: files-${{ matrix.chunk_file }}_demixed
           path: |
             ${{ env.NXF_OUPUT }}/demixed/
+      - name: Upload Artifacts
+        if: failure()
+        run: |
+          # print available disk space
+          df -h
+          # get available ram
+          free -h
+
 
   push_files:
     needs: [process_sra, process_milk_samples]
