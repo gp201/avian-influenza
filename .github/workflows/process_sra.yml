@@ -68,6 +68,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
+      max-parallel: 2
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_files)}}
     steps:
