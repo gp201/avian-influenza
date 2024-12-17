@@ -31,7 +31,6 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       chunk_files: ${{ steps.split_sra.outputs.chunk_files }}
-      milk_chunk_files: ${{ steps.split_sra.outputs.milk_chunk_files }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,10 +45,10 @@ jobs:
           grep -v ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt > ${{ env.NXF_OUPUT }}/metadata/SraRunTable_without_milk_samples.txt
           split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_new.txt ${{ github.workspace }}/sra_chunks/chunk_
           split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_chunk_
-          chunk_files=$(ls ${{ github.workspace }}/sra_chunks/chunk_* | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
-          milk_chunk_files=$(ls ${{ github.workspace }}/sra_chunks/milk_chunk_* | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
+          chunk_files=$(ls ${{ github.workspace }}/sra_chunks/ | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
+          # milk_chunk_files=$(ls ${{ github.workspace }}/sra_chunks/milk_chunk_* | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
           echo "chunk_files=$chunk_files" >> $GITHUB_OUTPUT
-          echo "milk_chunk_files=$milk_chunk_files" >> $GITHUB_OUTPUT
+          # echo "milk_chunk_files=$milk_chunk_files" >> $GITHUB_OUTPUT
       - name: Upload chunk files
         if: ${{ steps.split_sra.outputs.chunk_files != '' }}
         uses: actions/upload-artifact@v4
@@ -72,7 +71,6 @@ jobs:
       max-parallel: 10
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_files)}}
-        milk_chunk_file: ${{fromJson(needs.fetch_sra.outputs.milk_chunk_files)}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -83,12 +81,20 @@ jobs:
         with:
           name: sra_chunks
           path: ${{ github.workspace }}/sra_chunks/
+      - name: Setup samples
+        run: |
+          # if milk in chunk_file name, then set github env as IS_MILK_SAMPLE = true
+          if [[ ${{ matrix.chunk_file }} == *"milk"* ]]; then
+            echo "IS_MILK_SAMPLE=true" >> $GITHUB_ENV
+          else
+            echo "IS_MILK_SAMPLE=false" >> $GITHUB_ENV
+          fi
       - name: Run nextflow
-        if: ${{ matrix.chunk_file != '' }}
+        if: ${{ env.IS_MILK_SAMPLE != 'true' }}
         run: nextflow run https://github.com/gp201/flusra.git -r ${{ env.FLUSRA_VERSION }} -c ${{ github.workspace }}/config/nextflow.config -profile mamba --sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.chunk_file }} --outdir ${{ env.NXF_OUPUT }}
       - name: Run nextflow for milk samples
-        if: ${{ matrix.milk_chunk_file != '' }}
-        run: nextflow run https://github.com/gp201/flusra.git -r ${{ env.FLUSRA_VERSION }} -c ${{ github.workspace }}/config/nextflow.config -profile mamba --sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.milk_chunk_file }} --milk_sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.milk_chunk_file }} --outdir ${{ env.NXF_OUPUT }}
+        if: ${{ env.IS_MILK_SAMPLE == 'true' }}
+        run: nextflow run https://github.com/gp201/flusra.git -r ${{ env.FLUSRA_VERSION }} -c ${{ github.workspace }}/config/nextflow.config -profile mamba --sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.chunk_file }} --milk_sra_accessions ${{ github.workspace }}/sra_chunks/${{ matrix.chunk_file }} --outdir ${{ env.NXF_OUPUT }}
       - name: Upload Outputs
         uses: actions/upload-artifact@v4
         with:
@@ -98,7 +104,7 @@ jobs:
             ${{ env.NXF_OUPUT }}/depth/
             ${{ env.NXF_OUPUT }}/variants/
       - name: Upload Demixed
-        if: ${{ matrix.milk_chunk_file != '' }}
+        if: ${{ env.IS_MILK_SAMPLE == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: files-demixed-${{ matrix.milk_chunk_file }}
