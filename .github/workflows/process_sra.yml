@@ -19,7 +19,7 @@ env:
   NXF_OUPUT: ${{ github.workspace }}/output
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   FLUSRA_VERSION: 'gff_support'
-  FILES_PER_CHUNK: 4
+  FILES_PER_CHUNK: 3
 
 defaults:
   run:
@@ -68,7 +68,6 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_files)}}
     steps:
