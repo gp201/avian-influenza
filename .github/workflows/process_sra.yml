@@ -68,7 +68,6 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
-      max-parallel: 10
       matrix:
         chunk_file: ${{fromJson(needs.fetch_sra.outputs.chunk_files)}}
     steps:
@@ -115,7 +114,7 @@ jobs:
         with:
           name: outputs
           path: |
-            ${{ env.NXF_WORK }}
+            $${{ github.workspace }}/.nextflow.log
 
   push_files:
     needs: [process_sra]
