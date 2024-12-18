@@ -115,6 +115,7 @@ jobs:
           name: outputs
           path: |
             $${{ github.workspace }}/.nextflow.log
+            df -H
 
   push_files:
     needs: [process_sra]
