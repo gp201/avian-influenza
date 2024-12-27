@@ -67,7 +67,6 @@ jobs:
           include-hidden-files: true
           path: |
             ${{ github.workspace }}/.nextflow.log
-      
 
   process_sra:
     needs: fetch_sra
