@@ -64,7 +64,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: failed-run-fetch-sra
-          path: .nextflow.log
+          include-hidden-files: true
+          path: |
+            ${{ github.workspace }}/.nextflow.log
       
 
   process_sra:
@@ -118,6 +120,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: failed-run-${{ matrix.chunk_file }}
+          include-hidden-files: true
           path: |
             ${{ github.workspace }}/.nextflow.log
 
