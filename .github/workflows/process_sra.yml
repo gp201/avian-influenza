@@ -19,7 +19,7 @@ env:
   NXF_OUPUT: ${{ github.workspace }}/output
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   FLUSRA_VERSION: 'gff_support'
-  FILES_PER_CHUNK: 3
+  FILES_PER_CHUNK: 5
 
 defaults:
   run:
