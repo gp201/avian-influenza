@@ -64,8 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: failed-run-fetch-sra
-          path: |
-            ${{ github.workspace }}/.nextflow.log
+          path: .nextflow.log
       
 
   process_sra:
