@@ -65,7 +65,7 @@ jobs:
         with:
           name: failed-run-fetch-sra
           path: |
-            $${{ github.workspace }}/.nextflow.log
+            ${{ github.workspace }}/.nextflow.log
       
 
   process_sra:
@@ -120,7 +120,7 @@ jobs:
         with:
           name: failed-run-${{ matrix.chunk_file }}
           path: |
-            $${{ github.workspace }}/.nextflow.log
+            ${{ github.workspace }}/.nextflow.log
 
   push_files:
     needs: [process_sra]
