@@ -27,7 +27,8 @@ runs:
       with:
         python-version: 3.11
         mamba-version: "*"
-        channels: conda-forge,bioconda,nodefaults
+        channels: conda-forge,bioconda
+        conda-remove-defaults: "true"
         channel-priority: true
         activate-environment: anaconda-client-env
     - name: Setup nextflow
