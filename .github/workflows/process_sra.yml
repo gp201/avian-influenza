@@ -113,7 +113,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: files-demixed-${{ matrix.chunk_file }}
-          path: ${{ env.NXF_OUTPUT }}/demixed/
+          path: |
+            ${{ env.NXF_OUTPUT }}/demixed/
       - name: Upload Nextflow log
         if: failure()
         uses: actions/upload-artifact@v4
