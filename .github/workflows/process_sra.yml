@@ -16,7 +16,7 @@ concurrency:
 env:
   NXF_VER: "24.10.3"
   NXF_WORK: ${{ github.workspace }}/work
-  NXF_OUPUT: ${{ github.workspace }}/output
+  NXF_OUPUT: ${{ github.workspace }}/outputs
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   FLUSRA_VERSION: 'main'
   FILES_PER_CHUNK: 5
@@ -38,7 +38,7 @@ jobs:
       - name: Run nextflow
         run: nextflow run https://github.com/gp201/flusra.git -r ${{ env.FLUSRA_VERSION }} -c ${{ github.workspace }}/config/nextflow.config -profile mamba --only_fetch true --bioproject ${{ env.BIOPROJECTS }} --outdir ${{ env.NXF_OUPUT }}
       - name: Split SRAs into chunks
-        if: ${{ hashFiles('output/metadata/SraRunTable_automated_new.txt') != '' }}
+        if: ${{ hashFiles('outputs/metadata/SraRunTable_automated_new.txt') != '' }}
         id: split_sra
         run: |
           mkdir -p ${{ github.workspace }}/sra_chunks/
