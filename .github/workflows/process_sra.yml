@@ -142,7 +142,6 @@ jobs:
           path: ${{ env.NXF_OUTPUT }}/
           merge-multiple: true
       - name: Download demixed files
-        if: ${{ needs.process_sra.outputs.chunk_files | contains('milk') }}
         uses: actions/download-artifact@v4
         with:
           pattern: demixed-*
