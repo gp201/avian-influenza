@@ -144,7 +144,7 @@ jobs:
       - name: Download demixed files
         uses: actions/download-artifact@v4
         with:
-          pattern: test-*
+          pattern: demixed-*
           path: ${{ env.NXF_OUTPUT }}/demixed/
           merge-multiple: true
       - name: Push outputs
