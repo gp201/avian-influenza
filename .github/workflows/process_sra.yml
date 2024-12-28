@@ -148,6 +148,8 @@ jobs:
           mv ${{ env.NXF_OUPUT }}/fasta/*.fa ${{ github.workspace }}/fasta/
           mv ${{ env.NXF_OUPUT }}/depth/*.tsv ${{ github.workspace }}/depth/
           mv ${{ env.NXF_OUPUT }}/variants/*.tsv ${{ github.workspace }}/variants/
+          ls ${{ env.NXF_OUPUT }}
+          ls ${{ env.NXF_OUPUT }}/demixed/ | wc -l
           if [ -d ${{ env.NXF_OUPUT }}/demixed/ ]; then
             mv ${{ env.NXF_OUPUT }}/demixed/ ${{ github.workspace }}/demixed/
             git add ${{ github.workspace }}/demixed/
