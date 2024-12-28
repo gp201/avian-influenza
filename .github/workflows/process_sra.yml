@@ -150,11 +150,11 @@ jobs:
           mv ${{ env.NXF_OUPUT }}/variants/*.tsv ${{ github.workspace }}/variants/
           if [ -d ${{ env.NXF_OUPUT }}/demixed/ ]; then
             mv ${{ env.NXF_OUPUT }}/demixed/ ${{ github.workspace }}/demixed/
+            git add ${{ github.workspace }}/demixed/
           fi
           git add ${{ github.workspace }}/metadata/SraRunTable_automated.csv
           git add ${{ github.workspace }}/fasta/*.fa
           git add ${{ github.workspace }}/depth/*.tsv
           git add ${{ github.workspace }}/variants/*.tsv
-          git add ${{ github.workspace }}/demixed/
           git commit -m "Add consensus sequences, depth, variant files, demixed files and updated metadata"
           git push
