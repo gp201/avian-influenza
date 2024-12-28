@@ -105,16 +105,16 @@ jobs:
         with:
           name: files-${{ matrix.chunk_file }}
           path: |
-            ${{ env.NXF_OUTPUT }}/fasta/
-            ${{ env.NXF_OUTPUT }}/depth/
-            ${{ env.NXF_OUTPUT }}/variants/
+            ${{ env.NXF_OUTPUT }}/fasta
+            ${{ env.NXF_OUTPUT }}/depth
+            ${{ env.NXF_OUTPUT }}/variants
       - name: Upload Demixed
         if: ${{ env.IS_MILK_SAMPLE == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: files-demixed-${{ matrix.chunk_file }}
           path: |
-            ${{ env.NXF_OUTPUT }}/demixed/
+            ${{ env.NXF_OUTPUT }}/demixed
       - name: Upload Nextflow log
         if: failure()
         uses: actions/upload-artifact@v4
