@@ -42,7 +42,7 @@ jobs:
         id: split_sra
         run: |
           mkdir -p ${{ github.workspace }}/sra_chunks/
-          grep -v ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_automated_new.txt > ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_without_milk_samples.txt
+          grep -vxFf ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_automated_new.txt > ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_without_milk_samples.txt
           split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_without_milk_samples.txt ${{ github.workspace }}/sra_chunks/chunk_
           split -l ${{ env.FILES_PER_CHUNK }} ${{ env.NXF_OUTPUT }}/metadata/SraRunTable_automated_milk_samples.txt ${{ github.workspace }}/sra_chunks/milk_chunk_
           chunk_files=$(ls ${{ github.workspace }}/sra_chunks/ | jq -R . | jq -s . | tr -d '\n' | tr -d " ")
